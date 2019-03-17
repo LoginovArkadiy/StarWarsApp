@@ -8,18 +8,39 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource{
 
+    let identifier = "cell"
+    let personService : PersonService = PersonsServiceNetwork()
+    var persons = [Person]()
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        tableView.dataSource = self
+        personService.getPeople{ persons in
+            self.persons = persons
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
-
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return persons.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for : indexPath)
+        cell.textLabel?.text = persons[indexPath.row].name
+        let height = "\(persons[indexPath.row].height)"
+        cell.detailTextLabel?.text = String(height.prefix(3))
+        return cell
+    }
 
 }
 
