@@ -23,7 +23,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
-        tableView.register(UINib(nibName: "PersonTableVIewCell", bundle: nil), forCellReuseIdentifier: identifier)
+        tableView.register(UINib(nibName: "MyPersonTableViewCell", bundle: nil), forCellReuseIdentifier: identifier)
         
         tableView.tableFooterView = UIView()
         
@@ -57,12 +57,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return persons.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-        cell.textLabel?.text = persons[indexPath.row].name
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? MyPersonTableViewCell else {
+            fatalError("TableView is incorrect")
+        }
+        let person = persons[indexPath.row]
+        cell.person = person
+        /*cell.textLabel?.text = persons[indexPath.row].name
         let height = "\(persons[indexPath.row].height)"
         cell.detailTextLabel?.text = String(height.prefix(3))
-        cell.imageView?.image = UIImage(named: persons[indexPath.row].getFileName())
+        cell.imageView?.image = UIImage(named: persons[indexPath.row].getFileName())*/
         return cell
     }
 
